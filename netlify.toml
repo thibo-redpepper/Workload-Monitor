@@ -1,0 +1,18 @@
+[build]
+  command = "echo 'No build step'"
+  publish = "."
+
+[[redirects]]
+  from = "/"
+  to = "/public/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/management"
+  to = "/public/management.html"
+  status = 200
+
+[[redirects]]
+  from = "/management/"
+  to = "/public/management.html"
+  status = 200
