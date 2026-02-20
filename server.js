@@ -410,6 +410,19 @@ function wrikeDelete(endpoint) {
   return wrikeRequest("DELETE", endpoint);
 }
 
+function isUnsupportedDescriptionFieldError(error) {
+  const message = String(error?.message || "").toLowerCase();
+  const status = Number(error?.status || 0);
+  if (status !== 400) return false;
+  return (
+    message.includes("description") &&
+    (message.includes("field") ||
+      message.includes("unknown") ||
+      message.includes("invalid") ||
+      message.includes("unsupported"))
+  );
+}
+
 function formatDateYYYYMMDD(date) {
   const y = date.getUTCFullYear();
   const m = String(date.getUTCMonth() + 1).padStart(2, "0");
@@ -543,7 +556,7 @@ async function getAllTasksForContact(contactId) {
     try {
       payload = await wrikeGet(`/tasks?${params.toString()}`);
     } catch (error) {
-      if (wrikeSupportsTaskDescriptionField) {
+      if (wrikeSupportsTaskDescriptionField && isUnsupportedDescriptionFieldError(error)) {
         wrikeSupportsTaskDescriptionField = false;
         safety -= 1;
         continue;
@@ -598,7 +611,7 @@ async function getTasksByIds(taskIds) {
     try {
       payload = await wrikeGet(`/tasks/${group.join(",")}?fields=${fields}`);
     } catch (error) {
-      if (wrikeSupportsTaskDescriptionField) {
+      if (wrikeSupportsTaskDescriptionField && isUnsupportedDescriptionFieldError(error)) {
         wrikeSupportsTaskDescriptionField = false;
         payload = await wrikeGet(
           `/tasks/${group.join(",")}?fields=[effortAllocation]`
@@ -1623,7 +1636,15 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
-server.listen(config.port, () => {
-  console.log(`Wrike dashboard running on http://localhost:${config.port}`);
-  console.log("Wrike secrets backend: process env / optional .env local file");
-});
+function startServer() {
+  server.listen(config.port, () => {
+    console.log(`Wrike dashboard running on http://localhost:${config.port}`);
+    console.log("Wrike secrets backend: process env / optional .env local file");
+  });
+}
+
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = { server, startServer };
