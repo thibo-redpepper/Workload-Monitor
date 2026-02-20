@@ -1,0 +1,13 @@
+{
+  "name": "wrike-optimalisatie-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local dashboard for Wrike workload per team member and day",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

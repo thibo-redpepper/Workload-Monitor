@@ -1,0 +1,7 @@
+# Local environment secrets
+.env/.env.local
+.env/*.local
+.env/*.secret
+
+# macOS
+.DS_Store

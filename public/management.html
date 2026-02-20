@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CapacityHub Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Zilla+Slab:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/public/tokens.css" />
+    <link rel="stylesheet" href="/public/styles.css" />
+  </head>
+  <body>
+    <div class="backdrop"></div>
+    <main class="app-shell">
+      <header class="hero">
+        <p class="hero-kicker">CapacityHub</p>
+        <h1>Management overzicht</h1>
+        <p class="hero-sub">
+          Overkoepelend zicht op overboeking, herplan-kansen en taken die mogelijk
+          niet meer nodig zijn.
+        </p>
+        <nav class="mode-nav">
+          <a class="mode-link" href="/">Teamlid overzicht</a>
+          <a class="mode-link is-active" href="/management">Management overzicht</a>
+        </nav>
+      </header>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Analyse</h2>
+          <div class="management-controls">
+            <input id="managementDateInput" type="date" />
+            <input
+              id="managementCapacityInput"
+              type="number"
+              min="1"
+              step="0.5"
+              value="7"
+            />
+            <button id="loadManagementBtn" class="btn-soft">Analyseer iedereen</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Dagfocus per team</h2>
+        </div>
+        <div id="managementTeams" class="team-board"></div>
+      </section>
+
+      <section class="panel split">
+        <div>
+          <h3>Profielen met hoogste druk</h3>
+          <div id="managementProfiles" class="management-list"></div>
+        </div>
+        <div>
+          <h3>Aanbevolen herplanning / cleanup</h3>
+          <div id="managementRecommendations" class="management-list"></div>
+        </div>
+      </section>
+    </main>
+
+    <div id="replanModal" class="modal hidden">
+      <div class="modal-card replan-card">
+        <div class="modal-head">
+          <h3>Herplannen</h3>
+          <button id="closeReplanBtn" class="btn-ghost btn-small">Sluit</button>
+        </div>
+        <p id="replanTaskTitle" class="replan-task-title"></p>
+        <div class="replan-body">
+          <div class="replan-field">
+            <label for="replanActionInput">Actie</label>
+            <select id="replanActionInput">
+              <option value="must_this_week">Moet deze week</option>
+              <option value="plus_one_week">+1 week</option>
+              <option value="cancel">Annuleren</option>
+            </select>
+          </div>
+          <div id="replanReasonField" class="replan-field hidden">
+            <label for="replanReasonPresetInput">Reden voor annuleren</label>
+            <select id="replanReasonPresetInput">
+              <option value="Niet meer nodig">Niet meer nodig</option>
+              <option value="Dubbele taak">Dubbele taak</option>
+              <option value="Geen input ontvangen">Geen input ontvangen</option>
+              <option value="Foutief ingepland">Foutief ingepland</option>
+              <option value="custom">Andere reden (zelf typen)</option>
+            </select>
+            <label for="replanReasonInput">Extra toelichting (optioneel)</label>
+            <textarea
+              id="replanReasonInput"
+              placeholder="Optioneel: extra context voor @Planning"
+            ></textarea>
+            <p class="replan-note">
+              Dit wordt als comment geplaatst op de taak in Wrike: @Planning ...
+            </p>
+          </div>
+        </div>
+        <p id="replanErrorText" class="replan-error hidden"></p>
+        <div class="modal-actions">
+          <button id="applyReplanBtn" class="btn-primary">Toepassen</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/public/management.js"></script>
+  </body>
+</html>

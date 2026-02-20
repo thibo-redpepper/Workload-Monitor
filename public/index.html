@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CapacityHub Team</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Zilla+Slab:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/public/tokens.css" />
+    <link rel="stylesheet" href="/public/styles.css" />
+  </head>
+  <body>
+    <div class="backdrop"></div>
+    <main class="app-shell team-page">
+      <header class="hero compact">
+        <div>
+          <p class="hero-kicker">CapacityHub</p>
+          <h1>Workload Workspace</h1>
+          <p class="hero-sub">Snelle triage om te herplannen, prioriteren of schrappen.</p>
+        </div>
+        <nav class="mode-nav">
+          <a class="mode-link is-active" href="/">Teamlid overzicht</a>
+          <a class="mode-link" href="/management">Management overzicht</a>
+        </nav>
+      </header>
+
+      <section class="workspace-filters">
+        <div class="field-inline">
+          <label for="contactSelect">Teamlid</label>
+          <select id="contactSelect"></select>
+        </div>
+        <div class="field-inline">
+          <label for="dayInput">Datum</label>
+          <input id="dayInput" type="date" />
+        </div>
+        <div class="field-inline">
+          <label for="capacityInput">Dagcapaciteit</label>
+          <input id="capacityInput" type="number" min="1" step="0.5" value="7" />
+        </div>
+        <button id="loadButton" class="btn-primary">Laad workload</button>
+      </section>
+
+      <section id="workloadStrip" class="workload-strip"></section>
+      <section id="weekPreview" class="week-preview"></section>
+
+      <section id="overbookedAlert" class="overbooked-alert hidden">
+        <p id="overbookedText"></p>
+        <div class="alert-actions">
+          <button id="alertRescheduleBtn" class="btn-soft">Herplannen</button>
+          <button id="alertRebalanceBtn" class="btn-soft">Rebalance tasks</button>
+        </div>
+      </section>
+
+      <section class="workspace-main">
+        <article id="taskWorkspace" class="workspace-card task-workspace">
+          <div class="workspace-head">
+            <div>
+              <h2>Taken op gekozen dag</h2>
+              <p id="statusText">Kies een teamlid en klik op laad workload.</p>
+            </div>
+          </div>
+          <div id="todayList" class="task-list primary"></div>
+
+          <div class="lane-head">
+            <h3>Resterende week</h3>
+          </div>
+          <div id="upcomingList" class="task-list secondary"></div>
+        </article>
+
+        <aside class="workspace-side">
+          <section class="workspace-card side-block">
+            <h3>Overdue</h3>
+            <div id="overdueList" class="task-list compact"></div>
+          </section>
+
+          <section class="workspace-card side-block">
+            <h3>Backlog</h3>
+            <div id="backlogList" class="task-list compact"></div>
+          </section>
+
+          <section class="workspace-card side-block">
+            <div class="panel-header">
+              <h3>Actielog</h3>
+              <button id="refreshLogBtn" class="btn-ghost btn-small">Refresh</button>
+            </div>
+            <div id="actionLogList" class="log-list"></div>
+          </section>
+        </aside>
+      </section>
+    </main>
+
+    <section id="bulkBar" class="bulk-bar">
+      <div class="bulk-bar-inner">
+        <p id="selectionText">0 taken geselecteerd</p>
+        <div class="bulk-actions">
+          <button id="markPrioBtn" class="btn-soft">Mark priority</button>
+          <button id="openPlannerBtn" class="btn-soft">Herplannen</button>
+          <button id="markRemoveBtn" class="btn-soft">Mark not needed</button>
+          <button id="clearLabelBtn" class="btn-soft">Verwijder label</button>
+          <button id="deleteBtn" class="btn-danger">Delete</button>
+          <button id="clearSelectionBtn" class="btn-ghost">Clear</button>
+        </div>
+      </div>
+    </section>
+
+    <template id="taskItemTemplate">
+      <article class="task-row">
+        <label class="task-check">
+          <input type="checkbox" class="task-select" />
+        </label>
+        <div class="task-main">
+          <a class="task-title" target="_blank" rel="noreferrer"></a>
+          <p class="task-meta"></p>
+          <button type="button" class="briefing-toggle hidden">Toon briefing</button>
+          <div class="task-briefing hidden"></div>
+          <span class="task-label hidden"></span>
+        </div>
+        <div class="task-end">
+          <span class="hours-pill"></span>
+          <button class="menu-trigger" aria-label="Meer acties">⋯</button>
+          <div class="task-menu hidden">
+            <button class="menu-item reschedule-one">Herplannen</button>
+            <button class="menu-item push-one">Snel +1 week</button>
+            <button class="menu-item mark-prio-one">Mark priority</button>
+            <button class="menu-item mark-remove-one">Mark not needed</button>
+            <button class="menu-item clear-label-one hidden">Verwijder label</button>
+            <button class="menu-item danger delete-one">Delete</button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <div id="plannerModal" class="modal hidden">
+      <div class="modal-card">
+        <div class="modal-head">
+          <h3>Herplannen</h3>
+          <button id="closePlannerBtn" class="btn-ghost btn-small">Sluit</button>
+        </div>
+        <p id="plannerSummary"></p>
+        <div id="plannerSuggestions" class="suggestions"></div>
+        <div class="modal-actions">
+          <button id="applyPushWeekBtn" class="btn-soft">+1 week</button>
+          <button id="applyPlanBtn" class="btn-primary">Plan op gekozen dag</button>
+        </div>
+        <div id="plannerGrid" class="planner-grid"></div>
+      </div>
+    </div>
+
+    <script type="module" src="/public/app.js"></script>
+  </body>
+</html>

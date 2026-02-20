@@ -1,0 +1,36 @@
+:root {
+  --font-display: "Zilla Slab", "Roboto Slab", "IBM Plex Serif", Georgia, serif;
+  --font-ui: "Inter", "Manrope", "IBM Plex Sans", "SF Pro Text", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --color-bg: #fafaf7;
+  --color-surface: #ffffff;
+  --color-text: #1f1f1c;
+  --color-muted: #6b6b65;
+  --color-border: #e6e3db;
+  --color-primary: #4f5f13;
+  --color-primary-hover: #3f4c0f;
+  --color-primary-soft: rgba(79, 95, 19, 0.12);
+  --color-danger: #b42318;
+  --color-danger-soft: #fee4e2;
+
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.08);
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 56px;
+
+  --focus-ring: 0 0 0 3px rgba(79, 95, 19, 0.2);
+}
